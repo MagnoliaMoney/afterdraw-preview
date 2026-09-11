@@ -32,7 +32,7 @@
     .game { width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.85rem 0.9rem; }
     .game b { display: block; color: var(--blue-2); font-size: 0.95rem; }
     .balls { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-top: 0.5rem; }
-    .ball { min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px; display: grid; place-items: center; background: var(--blue); color: var(--blue-fg); font-size: 0.72rem; font-weight: 700; }
+    .ball { min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px; display: grid; place-items: center; background: var(--blue); color: #fff; font-size: 0.72rem; font-weight: 700; }
     .ball.gold { background: var(--gold); color: var(--gold-fg); }
     .tag { align-self: center; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
     .when { color: var(--mute); font-size: 0.72rem; margin-top: 0.35rem; }
@@ -41,7 +41,7 @@
     .back { border: 0; background: transparent; color: var(--blue); padding: 0 0 0.7rem; font-size: 0.85rem; }
     .grid-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; margin-top: 0.8rem; }
     .cell { aspect-ratio: 1; border-radius: 0.35rem; background: var(--raised); border: 1px solid var(--line); display: grid; place-items: center; font-size: 0.78rem; color: var(--mute); }
-    .cell.on { background: var(--blue); color: var(--blue-fg); border-color: var(--blue); }
+    .cell.on { background: var(--blue); color: #fff; border-color: var(--blue); }
     nav.tab { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: 100%; max-width: 28rem; display: none; grid-template-columns: 1fr 1fr 1fr; background: #0c1016; border-top: 1px solid var(--line); padding: 0.3rem 0.2rem calc(0.35rem + env(safe-area-inset-bottom)); }
     .app.tabs-on nav.tab { display: grid; }
     nav.tab button { border: 0; background: transparent; color: var(--mute); min-height: 3.1rem; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -260,7 +260,7 @@
       }
     };
     const stateSel = document.getElementById("state");
-    stateSel.innerHTML = STATES.map(([code, name]) => `<option value="${code}">${name}</option>`).join("");
+    stateSel.innerHTML = STATES.slice().sort((a, b) => a[1].localeCompare(b[1])).map(([code, name]) => `<option value="${code}">${name}</option>`).join("");
     stateSel.value = localStorage.getItem(KEY) || "MS";
     stateSel.onchange = renderResults;
     document.getElementById("save-state").onclick = () => {
