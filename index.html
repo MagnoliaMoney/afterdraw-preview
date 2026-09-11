@@ -37,7 +37,7 @@
     .ball.gold { background: var(--gold); color: var(--gold-fg); }
     .tag { align-self: center; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
     .when { color: var(--mute); font-size: 0.72rem; margin-top: 0.35rem; }
-    .unofficial { margin: 0.45rem 0 0; font-size: 0.7rem; line-height: 1.4; color: var(--mute); }
+    .unofficial { margin: 0.7rem 0 0; font-size: 0.72rem; line-height: 1.45; color: var(--mute); }
     .hist { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
     .back { border: 0; background: transparent; color: var(--blue); padding: 0 0 0.7rem; font-size: 0.85rem; }
     .grid-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; margin-top: 0.8rem; }
@@ -164,21 +164,21 @@
         return `<i class="ball${gold ? " gold" : ""}">${n}</i>`;
       }).join("") + (g.tag ? `<span class="tag">${g.tag}</span>` : "");
     }
+    const UNOFFICIAL = "Results are unofficial until certified and published by the applicable state lottery.";
     function renderResults() {
       document.getElementById("result-list").innerHTML = GAMES.map((g) => `
         <button class="game" type="button" data-game="${g.id}">
           <b>${g.name}</b>
           <div class="balls">${balls(g)}</div>
           <div class="when">Most recent drawing · sample</div>
-          <p class="unofficial">Unofficial until the official lottery posts this drawing.</p>
-        </button>`).join("");
+        </button>`).join("") + `<p class="unofficial">${UNOFFICIAL}</p>`;
     }
     function openHistory(id) {
       const g = GAMES.find((x) => x.id === id);
       document.getElementById("hist-title").textContent = g.name;
       document.getElementById("hist-rows").innerHTML = ["Today", "Yesterday", "2 days ago", "3 days ago"].map((label) => `
         <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g)}</div></div>`).join("") +
-        `<p class="unofficial">Unofficial until the official lottery posts these drawings.</p>`;
+        `<p class="unofficial">${UNOFFICIAL}</p>`;
       showTab("history");
     }
     document.getElementById("do-login").onclick = () => showScreen("pay");
