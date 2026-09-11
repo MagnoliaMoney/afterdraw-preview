@@ -13,6 +13,8 @@
       --blue: #4f8fd6;
       --blue-2: #7eb0ea;
       --blue-fg: #071018;
+      --gold: #e6c43a;
+      --gold-fg: #1a1406;
       --text: #e8eef6;
       --mute: #8b97a8;
     }
@@ -61,6 +63,8 @@
       display: grid; place-items: center; background: var(--blue); color: var(--blue-fg);
       font-size: 0.72rem; font-weight: 700;
     }
+    .ball.gold { background: var(--gold); color: var(--gold-fg); }
+    .tag { align-self: center; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
     .when { color: var(--mute); font-size: 0.72rem; margin-top: 0.35rem; }
     .hist { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
     .back { border: 0; background: transparent; color: var(--blue); padding: 0 0 0.7rem; font-size: 0.85rem; }
@@ -166,15 +170,15 @@
   </div>
   <script>
     const GAMES = [
-      { id: "pb", name: "Powerball", balls: 6 },
-      { id: "mm", name: "Mega Millions", balls: 6 },
+      { id: "pb", name: "Powerball", balls: 6, gold: true, tag: "Powerball" },
+      { id: "mm", name: "Mega Millions", balls: 6, gold: true, tag: "Mega Ball" },
       { id: "p3", name: "Pick 3", balls: 3 },
       { id: "p4", name: "Pick 4", balls: 4 },
       { id: "p5", name: "Pick 5", balls: 5 },
       { id: "pop", name: "Cash Pop", balls: 1 },
       { id: "m5", name: "Match 5", balls: 5 },
-      { id: "la", name: "Lotto America", balls: 6 },
-      { id: "mil", name: "Millionaire for Life", balls: 6 }
+      { id: "la", name: "Lotto America", balls: 6, gold: true, tag: "Star Ball" },
+      { id: "mil", name: "Millionaire for Life", balls: 6, gold: true, tag: "Gold Ball" }
     ];
     const app = document.getElementById("app");
     const phase = document.getElementById("phase");
@@ -194,14 +198,18 @@
       });
       window.scrollTo(0, 0);
     }
-    function balls(n) {
-      return Array.from({ length: n }, (_, i) => `<i class="ball">${(i * 7 + 3) % 10}</i>`).join("");
+    function balls(g) {
+      return Array.from({ length: g.balls }, (_, i) => {
+        const gold = g.gold && i === g.balls - 1;
+        const n = gold ? (i * 3 + 11) % 26 + 1 : (i * 7 + 3) % 20 + 1;
+        return `<i class="ball${gold ? " gold" : ""}">${n}</i>`;
+      }).join("") + (g.tag ? `<span class="tag">${g.tag}</span>` : "");
     }
     function renderResults() {
       document.getElementById("result-list").innerHTML = GAMES.map((g) => `
         <button class="game" type="button" data-game="${g.id}">
           <b>${g.name}</b>
-          <div class="balls">${balls(g.balls)}</div>
+          <div class="balls">${balls(g)}</div>
           <div class="when">Most recent drawing · sample</div>
         </button>`).join("");
     }
@@ -209,7 +217,7 @@
       const g = GAMES.find((x) => x.id === id);
       document.getElementById("hist-title").textContent = g.name;
       document.getElementById("hist-rows").innerHTML = ["Today", "Yesterday", "2 days ago", "3 days ago"].map((label) => `
-        <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g.balls)}</div></div>`).join("");
+        <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g)}</div></div>`).join("");
       showTab("history");
     }
     document.getElementById("do-login").onclick = () => showScreen("pay");
