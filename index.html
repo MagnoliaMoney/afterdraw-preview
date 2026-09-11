@@ -20,8 +20,7 @@
     header b { color: var(--blue-2); font-size: 1.12rem; }
     header span { color: var(--mute); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
     main { flex: 1; padding: 1rem; }
-    .screen, .page { display: none; }
-    .screen.on, .page.on { display: block; }
+    .screen, .page { display: none; } .screen.on, .page.on { display: block; }
     h1, h2 { margin: 0 0 0.4rem; font-size: 1.4rem; font-weight: 650; }
     .sub { margin: 0 0 1rem; color: var(--mute); font-size: 0.88rem; line-height: 1.45; }
     .field { display: block; margin: 0 0 0.75rem; color: var(--mute); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -70,7 +69,7 @@
       </section>
       <section id="pay" class="screen">
         <h1>Unlock AfterDraw</h1>
-        <p class="sub">Paywall after login. Tabs stay locked until access is on.</p>
+        <p class="sub">Paywall after login.</p>
         <div class="card" style="margin-bottom:0.8rem">
           <div class="note" style="text-transform:uppercase;letter-spacing:0.1em;font-size:0.68rem">Your code</div>
           <p class="code">AD-SHELL</p>
@@ -83,10 +82,8 @@
       </section>
       <section id="results" class="page">
         <h2>Results</h2>
-        <p class="sub">Most recent drawing. Tap the game name for history.</p>
-        <label class="field">State
-          <select><option>Mississippi</option><option>Alabama</option><option>Tennessee</option><option>Any state</option></select>
-        </label>
+        <p class="sub">Pick a state. Only games that state sells in AfterDraw’s list will load.</p>
+        <label class="field">State<select id="state"></select></label>
         <div class="stack" id="result-list"></div>
       </section>
       <section id="history" class="page">
@@ -128,17 +125,71 @@
     </nav>
   </div>
   <script>
-    const GAMES = [
-      { id: "pb", name: "Powerball", balls: 6, gold: true, tag: "Powerball" },
-      { id: "mm", name: "Mega Millions", balls: 6, gold: true, tag: "Mega Ball" },
-      { id: "p3", name: "Pick 3", balls: 3 },
-      { id: "p4", name: "Pick 4", balls: 4 },
-      { id: "p5", name: "Pick 5", balls: 5 },
-      { id: "pop", name: "Cash Pop", balls: 1 },
-      { id: "m5", name: "Match 5", balls: 5 },
-      { id: "la", name: "Lotto America", balls: 6, gold: true, tag: "Star Ball" },
-      { id: "mil", name: "Millionaire for Life", balls: 6, gold: true, tag: "Gold Ball" }
-    ];
+    const PB = { id: "pb", name: "Powerball", balls: 6, gold: true, tag: "Powerball" };
+    const MM = { id: "mm", name: "Mega Millions", balls: 6, gold: true, tag: "Mega Ball" };
+    const POP = { id: "pop", name: "Cash Pop", balls: 1 };
+    const LA = { id: "la", name: "Lotto America", balls: 6, gold: true, tag: "Star Ball" };
+    const MIL = { id: "mil", name: "Millionaire for Life", balls: 6, gold: true, tag: "Gold Ball" };
+    const p3 = (name) => ({ id: "p3", name, balls: 3 });
+    const p4 = (name) => ({ id: "p4", name, balls: 4 });
+    const p5 = (name) => ({ id: "p5", name, balls: 5 });
+    const NO_LOTTERY = new Set(["AL","AK","HI","NV","UT"]);
+    const CASH_POP = new Set(["FL","GA","IN","KY","ME","MD","MI","MS","MO","NJ","NC","OR","PA","SC","VA","WA","WV"]);
+    const LOTTO_AM = new Set(["DE","DC","ID","IA","KS","ME","MN","MS","MT","NE","NM","ND","OK","SD","TN","WV"]);
+    const MIL_LIFE = new Set(["AR","CO","CT","DC","GA","ID","IN","IA","KS","KY","ME","MA","MI","MS","MT","NE","NH","NJ","NY","NC","ND","OH","OK","PA","RI","SD","TN","VA","VT","WV","WY"]);
+    const LOCAL = {
+      MS: [p3("Cash 3"), p4("Cash 4"), p5("Mississippi Match 5")],
+      TN: [p3("Cash 3"), p4("Cash 4"), p5("Tennessee Cash")],
+      FL: [p3("Cash 3"), p4("Play 4"), p5("Fantasy 5")],
+      GA: [p3("Cash 3"), p4("Cash 4"), p5("Fantasy 5")],
+      TX: [p3("Pick 3"), p4("Daily 4"), p5("Cash Five")],
+      NY: [p3("Numbers"), p4("Win 4"), p5("Take 5")],
+      CA: [p3("Daily 3"), p4("Daily 4"), p5("Fantasy 5")],
+      PA: [p3("Pick 3"), p4("Pick 4"), p5("Cash 5")],
+      NJ: [p3("Pick 3"), p4("Pick 4"), p5("Jersey Cash 5")],
+      NC: [p3("Pick 3"), p4("Pick 4"), p5("Cash 5")],
+      SC: [p3("Pick 3"), p4("Pick 4"), p5("Palmetto Cash 5")],
+      LA: [p3("Pick 3"), p4("Pick 4")],
+      KY: [p3("Pick 3"), p4("Pick 4")],
+      OH: [p3("Pick 3"), p4("Pick 4"), p5("Rolling Cash 5")],
+      IN: [p3("Daily 3"), p4("Daily 4"), p5("Cash 5")],
+      MO: [p3("Pick 3"), p4("Pick 4"), p5("Show Me Cash")],
+      AR: [p3("Cash 3"), p4("Cash 4")],
+      VA: [p3("Pick 3"), p4("Pick 4"), p5("Cash 5")],
+      MD: [p3("Pick 3"), p4("Pick 4"), p5("Bonus Match 5")],
+      IL: [p3("Pick 3"), p4("Pick 4")],
+      MI: [p3("Daily 3"), p4("Daily 4"), p5("Fantasy 5")],
+      WI: [p3("Pick 3"), p4("Pick 4")],
+      MN: [p3("Daily 3"), p4("Daily 4"), p5("Northstar Cash")],
+      IA: [p3("Pick 3"), p4("Pick 4")],
+      KS: [p3("Pick 3"), p4("Pick 4")],
+      OK: [p3("Pick 3"), p4("Pick 4")],
+      NE: [p3("Pick 3"), p4("Pick 4")],
+      CO: [p3("Pick 3"), p5("Cash 5")],
+      AZ: [p3("Pick 3"), p4("Pick 4"), p5("Fantasy 5")],
+      NM: [p3("Pick 3"), p4("Pick 4"), p5("Roadrunner Cash")],
+      WA: [p3("Daily Game"), p5("Match 4")],
+      OR: [p4("Pick 4")],
+      CT: [p3("Play 3"), p4("Play 4"), p5("Cash 5")],
+      MA: [p3("The Numbers Game"), p4("The Numbers Game 4"), p5("Mass Cash")],
+      ME: [p3("Pick 3"), p4("Pick 4"), p5("Gimme 5")],
+      NH: [p3("Pick 3"), p4("Pick 4")],
+      VT: [p3("Pick 3"), p4("Pick 4")],
+      RI: [p3("The Numbers"), p4("The Numbers 4")],
+      DE: [p3("Play 3"), p4("Play 4")],
+      WV: [p3("Daily 3"), p4("Daily 4")],
+      DC: [p3("DC 3"), p4("DC 4"), p5("DC 5")]
+    };
+    const STATES = [["MS","Mississippi"],["AL","Alabama"],["TN","Tennessee"],["FL","Florida"],["GA","Georgia"],["LA","Louisiana"],["AR","Arkansas"],["TX","Texas"],["OK","Oklahoma"],["MO","Missouri"],["KY","Kentucky"],["NC","North Carolina"],["SC","South Carolina"],["VA","Virginia"],["WV","West Virginia"],["MD","Maryland"],["DE","Delaware"],["DC","District of Columbia"],["PA","Pennsylvania"],["NJ","New Jersey"],["NY","New York"],["CT","Connecticut"],["MA","Massachusetts"],["RI","Rhode Island"],["NH","New Hampshire"],["VT","Vermont"],["ME","Maine"],["OH","Ohio"],["IN","Indiana"],["IL","Illinois"],["MI","Michigan"],["WI","Wisconsin"],["MN","Minnesota"],["IA","Iowa"],["KS","Kansas"],["NE","Nebraska"],["SD","South Dakota"],["ND","North Dakota"],["CO","Colorado"],["NM","New Mexico"],["AZ","Arizona"],["CA","California"],["OR","Oregon"],["WA","Washington"],["ID","Idaho"],["MT","Montana"],["WY","Wyoming"],["AK","Alaska"],["HI","Hawaii"],["NV","Nevada"],["UT","Utah"]];
+    function gamesFor(code) {
+      if (NO_LOTTERY.has(code)) return [];
+      const list = [PB, MM];
+      list.push(...(LOCAL[code] || [p3("Pick 3"), p4("Pick 4")]));
+      if (CASH_POP.has(code)) list.push(POP);
+      if (LOTTO_AM.has(code)) list.push(LA);
+      if (MIL_LIFE.has(code)) list.push(MIL);
+      return list;
+    }
     const app = document.getElementById("app");
     const phase = document.getElementById("phase");
     function showScreen(id) {
@@ -164,9 +215,16 @@
         return `<i class="ball${gold ? " gold" : ""}">${n}</i>`;
       }).join("") + (g.tag ? `<span class="tag">${g.tag}</span>` : "");
     }
+    function currentState() { return document.getElementById("state").value || "MS"; }
     const UNOFFICIAL = "Results are unofficial until certified and published by the applicable state lottery.";
     function renderResults() {
-      document.getElementById("result-list").innerHTML = GAMES.map((g) => `
+      const list = gamesFor(currentState());
+      const box = document.getElementById("result-list");
+      if (!list.length) {
+        box.innerHTML = '<p class="unofficial">No lottery draw games in AfterDraw\u2019s list for this state.</p>';
+        return;
+      }
+      box.innerHTML = list.map((g) => `
         <button class="game" type="button" data-game="${g.id}">
           <b>${g.name}</b>
           <div class="balls">${balls(g)}</div>
@@ -174,9 +232,10 @@
         </button>`).join("") + `<p class="unofficial">${UNOFFICIAL}</p>`;
     }
     function openHistory(id) {
-      const g = GAMES.find((x) => x.id === id);
+      const g = gamesFor(currentState()).find((x) => x.id === id);
+      if (!g) return;
       document.getElementById("hist-title").textContent = g.name;
-      document.getElementById("hist-rows").innerHTML = ["Today", "Yesterday", "2 days ago", "3 days ago"].map((label) => `
+      document.getElementById("hist-rows").innerHTML = ["Today","Yesterday","2 days ago","3 days ago"].map((label) => `
         <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g)}</div></div>`).join("") +
         `<p class="unofficial">${UNOFFICIAL}</p>`;
       showTab("history");
@@ -204,6 +263,10 @@
         box.appendChild(cell);
       }
     };
+    const stateSel = document.getElementById("state");
+    stateSel.innerHTML = STATES.map(([code, name]) => `<option value="${code}">${name}</option>`).join("");
+    stateSel.value = "MS";
+    stateSel.onchange = renderResults;
     renderResults();
     document.getElementById("grid-box").innerHTML = Array.from({ length: 20 }, () => '<div class="cell">·</div>').join("");
   </script>
