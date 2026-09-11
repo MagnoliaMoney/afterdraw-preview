@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>The AfterDraw</title>
+  <style>
+    :root {
+      --bg: #07080a;
+      --panel: #101318;
+      --raised: #171b22;
+      --line: #243044;
+      --blue: #4f8fd6;
+      --blue-2: #7eb0ea;
+      --blue-fg: #071018;
+      --text: #e8eef6;
+      --mute: #8b97a8;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; }
+    body { min-height: 100dvh; }
+    button, input, select { font: inherit; color: inherit; }
+    .app {
+      min-height: 100dvh; max-width: 28rem; margin: 0 auto; background: var(--bg);
+      display: flex; flex-direction: column;
+    }
+    .app.tabs-on { padding-bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+    header {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+      padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid var(--line);
+    }
+    header b { color: var(--blue-2); font-size: 1.12rem; letter-spacing: 0.01em; }
+    header span { color: var(--mute); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    main { flex: 1; padding: 1rem; }
+    .screen, .page { display: none; }
+    .screen.on, .page.on { display: block; }
+    h1, h2 { margin: 0 0 0.4rem; font-size: 1.4rem; font-weight: 650; }
+    .sub { margin: 0 0 1rem; color: var(--mute); font-size: 0.88rem; line-height: 1.45; }
+    .field { display: block; margin: 0 0 0.75rem; color: var(--mute); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+    input, select {
+      width: 100%; margin-top: 0.4rem; min-height: 2.75rem; border-radius: 0.55rem;
+      border: 1px solid var(--line); background: var(--raised); padding: 0 0.8rem; color: var(--text);
+    }
+    .btn {
+      width: 100%; min-height: 2.9rem; border: 0; border-radius: 0.6rem;
+      background: var(--blue); color: var(--blue-fg); font-weight: 650;
+    }
+    .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--blue-2); }
+    .stack { display: grid; gap: 0.55rem; }
+    .card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.9rem;
+    }
+    .game {
+      width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line);
+      border-radius: 0.75rem; padding: 0.85rem 0.9rem;
+    }
+    .game b { display: block; color: var(--blue-2); font-size: 0.95rem; }
+    .balls { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-top: 0.5rem; }
+    .ball {
+      min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px;
+      display: grid; place-items: center; background: var(--blue); color: var(--blue-fg);
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .when { color: var(--mute); font-size: 0.72rem; margin-top: 0.35rem; }
+    .hist { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
+    .back { border: 0; background: transparent; color: var(--blue); padding: 0 0 0.7rem; font-size: 0.85rem; }
+    .grid-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; margin-top: 0.8rem; }
+    .cell {
+      aspect-ratio: 1; border-radius: 0.35rem; background: var(--raised); border: 1px solid var(--line);
+      display: grid; place-items: center; font-size: 0.78rem; color: var(--mute);
+    }
+    .cell.on { background: var(--blue); color: var(--blue-fg); border-color: var(--blue); }
+    nav.tab {
+      position: fixed; left: 50%; bottom: 0; transform: translateX(-50%);
+      width: 100%; max-width: 28rem;
+      display: none; grid-template-columns: 1fr 1fr 1fr;
+      background: #0c1016; border-top: 1px solid var(--line);
+      padding: 0.3rem 0.2rem calc(0.35rem + env(safe-area-inset-bottom));
+    }
+    .app.tabs-on nav.tab { display: grid; }
+    nav.tab button {
+      border: 0; background: transparent; color: var(--mute);
+      min-height: 3.1rem; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    nav.tab button[aria-current="page"] { color: var(--blue-2); }
+    .note { color: var(--mute); font-size: 0.8rem; }
+    .code { font-size: 1.6rem; letter-spacing: 0.12em; color: var(--blue-2); margin: 0.3rem 0 0; }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <b>The AfterDraw</b>
+      <span id="phase">Sign in</span>
+    </header>
+    <main>
+      <section id="login" class="screen on">
+        <h1>Sign in</h1>
+        <p class="sub">Log in, pay, then the tabs open.</p>
+        <label class="field">Email<input id="email" type="email" placeholder="you@email.com" /></label>
+        <label class="field">Password<input type="password" placeholder="••••••••" /></label>
+        <div class="stack">
+          <button class="btn" type="button" id="do-login">Sign in</button>
+          <button class="btn btn-ghost" type="button" id="do-create">Create account</button>
+        </div>
+      </section>
+      <section id="pay" class="screen">
+        <h1>Unlock AfterDraw</h1>
+        <p class="sub">Paywall after login. Tabs stay locked until access is on.</p>
+        <div class="card" style="margin-bottom:0.8rem">
+          <div class="note" style="text-transform:uppercase;letter-spacing:0.1em;font-size:0.68rem">Your code</div>
+          <p class="code">AD-SHELL</p>
+        </div>
+        <div class="stack">
+          <button class="btn" type="button" id="do-unlock">I paid — open tabs</button>
+          <button class="btn btn-ghost" type="button">Cash App</button>
+          <button class="btn btn-ghost" type="button">PayPal</button>
+        </div>
+      </section>
+      <section id="results" class="page">
+        <h2>Results</h2>
+        <p class="sub">Most recent drawing. Tap the game name for history.</p>
+        <label class="field">State
+          <select id="state">
+            <option>Mississippi</option>
+            <option>Alabama</option>
+            <option>Tennessee</option>
+            <option>Any state</option>
+          </select>
+        </label>
+        <div class="stack" id="result-list"></div>
+      </section>
+      <section id="history" class="page">
+        <button class="back" type="button" id="back-results">← Results</button>
+        <h2 id="hist-title">Game</h2>
+        <p class="sub">History for this game. Sample rows only.</p>
+        <div id="hist-rows"></div>
+      </section>
+      <section id="grids" class="page">
+        <h2>Grids</h2>
+        <p class="sub">Your personal grid data, built from what you type.</p>
+        <label class="field">What to map
+          <input id="grid-in" type="text" inputmode="numeric" placeholder="Type numbers, pairs, or a draw" />
+        </label>
+        <button class="btn" type="button" id="build-grid">Build my grid</button>
+        <div class="card" style="margin-top:0.85rem">
+          <div class="note" id="grid-label">Nothing typed yet.</div>
+          <div class="grid-box" id="grid-box"></div>
+        </div>
+      </section>
+      <section id="more" class="page">
+        <h2>More</h2>
+        <p class="sub">Sign out returns to login.</p>
+        <div class="stack">
+          <div class="card">Issues from theafterdraw.com</div>
+          <div class="card">About</div>
+          <button class="btn btn-ghost" type="button" id="do-out">Sign out</button>
+        </div>
+      </section>
+    </main>
+    <nav class="tab">
+      <button type="button" data-go="results" aria-current="page">Results</button>
+      <button type="button" data-go="grids">Grids</button>
+      <button type="button" data-go="more">More</button>
+    </nav>
+  </div>
+  <script>
+    const GAMES = [
+      { id: "pb", name: "Powerball", balls: 6 },
+      { id: "mm", name: "Mega Millions", balls: 6 },
+      { id: "p3", name: "Pick 3", balls: 3 },
+      { id: "p4", name: "Pick 4", balls: 4 },
+      { id: "p5", name: "Pick 5", balls: 5 },
+      { id: "pop", name: "Cash Pop", balls: 1 },
+      { id: "m5", name: "Match 5", balls: 5 },
+      { id: "la", name: "Lotto America", balls: 6 },
+      { id: "mil", name: "Millionaire for Life", balls: 6 }
+    ];
+    const app = document.getElementById("app");
+    const phase = document.getElementById("phase");
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach((s) => s.classList.toggle("on", s.id === id));
+      document.querySelectorAll(".page").forEach((p) => p.classList.remove("on"));
+      app.classList.remove("tabs-on");
+      phase.textContent = id === "pay" ? "Paywall" : "Sign in";
+    }
+    function showTab(id) {
+      document.querySelectorAll(".screen").forEach((s) => s.classList.remove("on"));
+      document.querySelectorAll(".page").forEach((p) => p.classList.toggle("on", p.id === id));
+      app.classList.add("tabs-on");
+      phase.textContent = "Member";
+      document.querySelectorAll("nav.tab button").forEach((b) => {
+        b.setAttribute("aria-current", b.dataset.go === (id === "history" ? "results" : id) ? "page" : "false");
+      });
+      window.scrollTo(0, 0);
+    }
+    function balls(n) {
+      return Array.from({ length: n }, (_, i) => `<i class="ball">${(i * 7 + 3) % 10}</i>`).join("");
+    }
+    function renderResults() {
+      document.getElementById("result-list").innerHTML = GAMES.map((g) => `
+        <button class="game" type="button" data-game="${g.id}">
+          <b>${g.name}</b>
+          <div class="balls">${balls(g.balls)}</div>
+          <div class="when">Most recent drawing · sample</div>
+        </button>`).join("");
+    }
+    function openHistory(id) {
+      const g = GAMES.find((x) => x.id === id);
+      document.getElementById("hist-title").textContent = g.name;
+      document.getElementById("hist-rows").innerHTML = ["Today", "Yesterday", "2 days ago", "3 days ago"].map((label) => `
+        <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g.balls)}</div></div>`).join("");
+      showTab("history");
+    }
+    document.getElementById("do-login").onclick = () => showScreen("pay");
+    document.getElementById("do-create").onclick = () => showScreen("pay");
+    document.getElementById("do-unlock").onclick = () => showTab("results");
+    document.getElementById("do-out").onclick = () => showScreen("login");
+    document.getElementById("back-results").onclick = () => showTab("results");
+    document.getElementById("result-list").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-game]");
+      if (btn) openHistory(btn.dataset.game);
+    });
+    document.querySelectorAll("nav.tab button").forEach((b) => { b.onclick = () => showTab(b.dataset.go); });
+    document.getElementById("build-grid").onclick = () => {
+      const raw = document.getElementById("grid-in").value.trim();
+      document.getElementById("grid-label").textContent = raw ? "Mapped from: " + raw : "Type something first.";
+      const box = document.getElementById("grid-box");
+      box.innerHTML = "";
+      const seed = raw.replace(/\D/g, "") || "0";
+      for (let i = 0; i < 20; i++) {
+        const cell = document.createElement("div");
+        cell.className = "cell" + (raw && i % 3 !== 2 ? " on" : "");
+        cell.textContent = (Number(seed[i % seed.length]) + i) % 10;
+        box.appendChild(cell);
+      }
+    };
+    renderResults();
+    document.getElementById("grid-box").innerHTML = Array.from({ length: 20 }, () => '<div class="cell">·</div>').join("");
+  </script>
+</body>
+</html>
