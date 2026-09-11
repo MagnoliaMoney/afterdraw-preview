@@ -6,32 +6,18 @@
   <title>The AfterDraw</title>
   <style>
     :root {
-      --bg: #07080a;
-      --panel: #101318;
-      --raised: #171b22;
-      --line: #243044;
-      --blue: #4f8fd6;
-      --blue-2: #7eb0ea;
-      --blue-fg: #071018;
-      --gold: #e6c43a;
-      --gold-fg: #1a1406;
-      --text: #e8eef6;
-      --mute: #8b97a8;
+      --bg: #07080a; --panel: #101318; --raised: #171b22; --line: #243044;
+      --blue: #4f8fd6; --blue-2: #7eb0ea; --blue-fg: #071018;
+      --gold: #e6c43a; --gold-fg: #1a1406; --text: #e8eef6; --mute: #8b97a8;
     }
     * { box-sizing: border-box; }
     html, body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, sans-serif; }
     body { min-height: 100dvh; }
     button, input, select { font: inherit; color: inherit; }
-    .app {
-      min-height: 100dvh; max-width: 28rem; margin: 0 auto; background: var(--bg);
-      display: flex; flex-direction: column;
-    }
+    .app { min-height: 100dvh; max-width: 28rem; margin: 0 auto; background: var(--bg); display: flex; flex-direction: column; }
     .app.tabs-on { padding-bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
-    header {
-      display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
-      padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid var(--line);
-    }
-    header b { color: var(--blue-2); font-size: 1.12rem; letter-spacing: 0.01em; }
+    header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; padding: 0.9rem 1rem 0.75rem; border-bottom: 1px solid var(--line); }
+    header b { color: var(--blue-2); font-size: 1.12rem; }
     header span { color: var(--mute); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
     main { flex: 1; padding: 1rem; }
     .screen, .page { display: none; }
@@ -39,69 +25,43 @@
     h1, h2 { margin: 0 0 0.4rem; font-size: 1.4rem; font-weight: 650; }
     .sub { margin: 0 0 1rem; color: var(--mute); font-size: 0.88rem; line-height: 1.45; }
     .field { display: block; margin: 0 0 0.75rem; color: var(--mute); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
-    input, select {
-      width: 100%; margin-top: 0.4rem; min-height: 2.75rem; border-radius: 0.55rem;
-      border: 1px solid var(--line); background: var(--raised); padding: 0 0.8rem; color: var(--text);
-    }
-    .btn {
-      width: 100%; min-height: 2.9rem; border: 0; border-radius: 0.6rem;
-      background: var(--blue); color: var(--blue-fg); font-weight: 650;
-    }
+    input, select { width: 100%; margin-top: 0.4rem; min-height: 2.75rem; border-radius: 0.55rem; border: 1px solid var(--line); background: var(--raised); padding: 0 0.8rem; color: var(--text); }
+    .btn { width: 100%; min-height: 2.9rem; border: 0; border-radius: 0.6rem; background: var(--blue); color: var(--blue-fg); font-weight: 650; }
     .btn-ghost { background: transparent; border: 1px solid var(--line); color: var(--blue-2); }
     .stack { display: grid; gap: 0.55rem; }
-    .card {
-      background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.9rem;
-    }
-    .game {
-      width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line);
-      border-radius: 0.75rem; padding: 0.85rem 0.9rem;
-    }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.9rem; }
+    .game { width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.85rem 0.9rem; }
     .game b { display: block; color: var(--blue-2); font-size: 0.95rem; }
     .balls { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-top: 0.5rem; }
-    .ball {
-      min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px;
-      display: grid; place-items: center; background: var(--blue); color: var(--blue-fg);
-      font-size: 0.72rem; font-weight: 700;
-    }
+    .ball { min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px; display: grid; place-items: center; background: var(--blue); color: var(--blue-fg); font-size: 0.72rem; font-weight: 700; }
     .ball.gold { background: var(--gold); color: var(--gold-fg); }
     .tag { align-self: center; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
     .when { color: var(--mute); font-size: 0.72rem; margin-top: 0.35rem; }
+    .unofficial { margin: 0.45rem 0 0; font-size: 0.7rem; line-height: 1.4; color: var(--mute); }
     .hist { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
     .back { border: 0; background: transparent; color: var(--blue); padding: 0 0 0.7rem; font-size: 0.85rem; }
     .grid-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.3rem; margin-top: 0.8rem; }
-    .cell {
-      aspect-ratio: 1; border-radius: 0.35rem; background: var(--raised); border: 1px solid var(--line);
-      display: grid; place-items: center; font-size: 0.78rem; color: var(--mute);
-    }
+    .cell { aspect-ratio: 1; border-radius: 0.35rem; background: var(--raised); border: 1px solid var(--line); display: grid; place-items: center; font-size: 0.78rem; color: var(--mute); }
     .cell.on { background: var(--blue); color: var(--blue-fg); border-color: var(--blue); }
-    nav.tab {
-      position: fixed; left: 50%; bottom: 0; transform: translateX(-50%);
-      width: 100%; max-width: 28rem;
-      display: none; grid-template-columns: 1fr 1fr 1fr;
-      background: #0c1016; border-top: 1px solid var(--line);
-      padding: 0.3rem 0.2rem calc(0.35rem + env(safe-area-inset-bottom));
-    }
+    nav.tab { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: 100%; max-width: 28rem; display: none; grid-template-columns: 1fr 1fr 1fr; background: #0c1016; border-top: 1px solid var(--line); padding: 0.3rem 0.2rem calc(0.35rem + env(safe-area-inset-bottom)); }
     .app.tabs-on nav.tab { display: grid; }
-    nav.tab button {
-      border: 0; background: transparent; color: var(--mute);
-      min-height: 3.1rem; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase;
-    }
+    nav.tab button { border: 0; background: transparent; color: var(--mute); min-height: 3.1rem; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; }
     nav.tab button[aria-current="page"] { color: var(--blue-2); }
     .note { color: var(--mute); font-size: 0.8rem; }
     .code { font-size: 1.6rem; letter-spacing: 0.12em; color: var(--blue-2); margin: 0.3rem 0 0; }
+    .legal { padding: 1rem 1rem 1.15rem; border-top: 1px solid var(--line); text-align: center; }
+    .legal p { margin: 0 0 0.35rem; font-size: 0.72rem; line-height: 1.45; color: var(--mute); }
+    .legal .owner { color: var(--blue-2); font-size: 0.8rem; }
   </style>
 </head>
 <body>
   <div class="app" id="app">
-    <header>
-      <b>The AfterDraw</b>
-      <span id="phase">Sign in</span>
-    </header>
+    <header><b>The AfterDraw</b><span id="phase">Sign in</span></header>
     <main>
       <section id="login" class="screen on">
         <h1>Sign in</h1>
         <p class="sub">Log in, pay, then the tabs open.</p>
-        <label class="field">Email<input id="email" type="email" placeholder="you@email.com" /></label>
+        <label class="field">Email<input type="email" placeholder="you@email.com" /></label>
         <label class="field">Password<input type="password" placeholder="••••••••" /></label>
         <div class="stack">
           <button class="btn" type="button" id="do-login">Sign in</button>
@@ -125,12 +85,7 @@
         <h2>Results</h2>
         <p class="sub">Most recent drawing. Tap the game name for history.</p>
         <label class="field">State
-          <select id="state">
-            <option>Mississippi</option>
-            <option>Alabama</option>
-            <option>Tennessee</option>
-            <option>Any state</option>
-          </select>
+          <select><option>Mississippi</option><option>Alabama</option><option>Tennessee</option><option>Any state</option></select>
         </label>
         <div class="stack" id="result-list"></div>
       </section>
@@ -143,9 +98,7 @@
       <section id="grids" class="page">
         <h2>Grids</h2>
         <p class="sub">Your personal grid data, built from what you type.</p>
-        <label class="field">What to map
-          <input id="grid-in" type="text" inputmode="numeric" placeholder="Type numbers, pairs, or a draw" />
-        </label>
+        <label class="field">What to map<input id="grid-in" type="text" inputmode="numeric" placeholder="Type numbers, pairs, or a draw" /></label>
         <button class="btn" type="button" id="build-grid">Build my grid</button>
         <div class="card" style="margin-top:0.85rem">
           <div class="note" id="grid-label">Nothing typed yet.</div>
@@ -162,6 +115,12 @@
         </div>
       </section>
     </main>
+    <footer class="legal">
+      <p class="owner">Property of Magnolia Money / Maggie Magnolia</p>
+      <p>For tracking, research, and entertainment purposes only.</p>
+      <p>© 2026 Magnolia Money / Maggie Magnolia</p>
+      <p>Contact magnoliamoney19@gmail.com</p>
+    </footer>
     <nav class="tab">
       <button type="button" data-go="results" aria-current="page">Results</button>
       <button type="button" data-go="grids">Grids</button>
@@ -211,13 +170,15 @@
           <b>${g.name}</b>
           <div class="balls">${balls(g)}</div>
           <div class="when">Most recent drawing · sample</div>
+          <p class="unofficial">Unofficial until the official lottery posts this drawing.</p>
         </button>`).join("");
     }
     function openHistory(id) {
       const g = GAMES.find((x) => x.id === id);
       document.getElementById("hist-title").textContent = g.name;
       document.getElementById("hist-rows").innerHTML = ["Today", "Yesterday", "2 days ago", "3 days ago"].map((label) => `
-        <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g)}</div></div>`).join("");
+        <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g)}</div></div>`).join("") +
+        `<p class="unofficial">Unofficial until the official lottery posts these drawings.</p>`;
       showTab("history");
     }
     document.getElementById("do-login").onclick = () => showScreen("pay");
