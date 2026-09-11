@@ -91,7 +91,7 @@
       <section id="history" class="page">
         <button class="back" type="button" id="back-results">← Results</button>
         <h2 id="hist-title">Game</h2>
-        <p class="sub">History for this game. Sample rows only.</p>
+        <p class="sub" id="hist-sub">One month of drawings.</p>
         <div id="hist-rows"></div>
       </section>
       <section id="grids" class="page">
@@ -181,6 +181,12 @@
       if (MIL_LIFE.has(code)) list.push(MIL);
       return list;
     }
+    const HISTORY = {
+      pb: [["Wed Sep 9, 2026",[9,40,42,55,65,23]],["Mon Sep 7, 2026",[15,19,28,39,56,3]],["Sat Sep 5, 2026",[15,40,47,53,59,9]],["Wed Sep 2, 2026",[3,10,29,58,64,14]],["Mon Aug 31, 2026",[11,17,25,37,49,10]],["Sat Aug 29, 2026",[18,56,62,65,67,18]],["Wed Aug 26, 2026",[12,32,45,50,58,2]],["Mon Aug 24, 2026",[3,16,33,38,68,2]],["Sat Aug 22, 2026",[13,31,54,57,65,23]],["Wed Aug 19, 2026",[10,21,58,61,64,17]],["Mon Aug 17, 2026",[8,15,25,49,65,22]],["Sat Aug 15, 2026",[5,8,27,29,63,13]],["Wed Aug 12, 2026",[4,26,66,67,69,9]]],
+      mm: [["Tue Sep 8, 2026",[17,30,43,58,66,20]],["Fri Sep 4, 2026",[6,26,34,59,61,24]],["Tue Sep 1, 2026",[1,22,51,61,63,17]],["Fri Aug 28, 2026",[8,17,29,42,55,2]],["Tue Aug 25, 2026",[7,10,47,48,50,14]],["Fri Aug 21, 2026",[1,25,34,48,57,24]],["Tue Aug 18, 2026",[5,19,30,38,59,12]],["Fri Aug 14, 2026",[3,23,27,46,60,11]],["Tue Aug 11, 2026",[1,20,30,46,68,17]]],
+      la: [["Wed Sep 9, 2026",[3,4,44,47,49,4]],["Mon Sep 7, 2026",[1,15,24,35,42,9]],["Sat Sep 5, 2026",[20,21,27,32,44,3]],["Wed Sep 2, 2026",[2,4,16,39,45,6]],["Mon Aug 31, 2026",[8,22,27,30,34,4]],["Sat Aug 29, 2026",[7,10,25,30,33,2]],["Wed Aug 26, 2026",[5,8,36,37,45,5]],["Mon Aug 24, 2026",[7,13,23,35,44,3]],["Sat Aug 22, 2026",[20,23,36,42,50,4]],["Wed Aug 19, 2026",[23,31,40,41,45,1]],["Mon Aug 17, 2026",[5,8,10,24,27,4]],["Sat Aug 15, 2026",[8,18,19,40,41,10]],["Wed Aug 12, 2026",[1,9,27,32,36,2]]],
+      mil: [["Thu Sep 10, 2026",[7,16,43,50,58,1]],["Wed Sep 9, 2026",[2,25,54,55,57,2]],["Tue Sep 8, 2026",[14,19,36,41,42,2]],["Mon Sep 7, 2026",[1,14,35,42,51,2]],["Sun Sep 6, 2026",[17,30,39,40,55,4]],["Sat Sep 5, 2026",[8,22,24,38,58,3]],["Fri Sep 4, 2026",[13,34,41,51,52,4]],["Thu Sep 3, 2026",[1,10,23,29,33,3]],["Wed Sep 2, 2026",[7,23,43,46,53,3]],["Tue Sep 1, 2026",[16,37,45,55,58,4]],["Mon Aug 31, 2026",[2,9,30,37,45,4]],["Sun Aug 30, 2026",[9,27,36,54,56,3]],["Sat Aug 29, 2026",[2,7,26,45,52,4]],["Fri Aug 28, 2026",[8,10,11,12,44,2]],["Thu Aug 27, 2026",[3,7,29,35,49,5]],["Wed Aug 26, 2026",[3,25,51,54,56,4]],["Tue Aug 25, 2026",[24,45,50,53,57,3]],["Mon Aug 24, 2026",[7,19,26,41,49,4]],["Sun Aug 23, 2026",[15,28,32,55,57,1]],["Sat Aug 22, 2026",[7,17,27,36,39,4]],["Fri Aug 21, 2026",[1,20,25,56,57,2]],["Thu Aug 20, 2026",[1,16,26,40,44,4]],["Wed Aug 19, 2026",[10,12,26,44,57,4]],["Tue Aug 18, 2026",[4,18,29,32,37,4]],["Mon Aug 17, 2026",[3,6,33,42,48,4]],["Sun Aug 16, 2026",[10,13,41,43,52,2]],["Sat Aug 15, 2026",[12,13,26,35,43,4]],["Fri Aug 14, 2026",[12,15,18,28,35,3]],["Thu Aug 13, 2026",[7,16,25,35,42,2]],["Wed Aug 12, 2026",[8,22,23,28,35,3]]]
+    };
     const KEY = "afterdraw-default-state";
     function stateName(code) { const row = STATES.find((s) => s[0] === code); return row ? row[1] : code; }
     function showDefault() {
@@ -204,10 +210,10 @@
       });
       window.scrollTo(0, 0);
     }
-    function balls(g) {
-      return Array.from({ length: g.balls }, (_, i) => {
-        const gold = g.gold && i === g.balls - 1;
-        const n = gold ? (i * 3 + 11) % 26 + 1 : (i * 7 + 3) % 20 + 1;
+    function balls(g, nums) {
+      const list = nums && nums.length ? nums : Array.from({ length: g.balls }, (_, i) => (i * 7 + 3) % 20 + 1);
+      return list.map((n, i) => {
+        const gold = g.gold && i === list.length - 1;
         return `<span class="ball${gold ? " gold" : ""}" style="color:${gold ? "#1a1406" : "#ffffff"}">${n}</span>`;
       }).join("") + (g.tag ? `<span class="tag">${g.tag}</span>` : "");
     }
@@ -220,20 +226,21 @@
         box.innerHTML = '<p class="unofficial">No lottery draw games in AfterDraw\u2019s list for this state.</p>';
         return;
       }
-      box.innerHTML = list.map((g) => `
-        <button class="game" type="button" data-game="${g.id}">
-          <b>${g.name}</b>
-          <div class="balls">${balls(g)}</div>
-          <div class="when">Most recent drawing · sample</div>
-        </button>`).join("") + `<p class="unofficial">${UNOFFICIAL}</p>`;
+      box.innerHTML = list.map((g) => {
+        const latest = (HISTORY[g.id] || [])[0];
+        const when = latest ? latest[0] : "History coming later";
+        return `<button class="game" type="button" data-game="${g.id}"><b>${g.name}</b><div class="balls">${balls(g, latest && latest[1])}</div><div class="when">${when}</div></button>`;
+      }).join("") + `<p class="unofficial">${UNOFFICIAL}</p>`;
     }
     function openHistory(id) {
       const g = gamesFor(currentState()).find((x) => x.id === id);
       if (!g) return;
       document.getElementById("hist-title").textContent = g.name;
-      document.getElementById("hist-rows").innerHTML = ["Today","Yesterday","2 days ago","3 days ago"].map((label) => `
-        <div class="hist"><span class="note">${label}</span><div class="balls">${balls(g)}</div></div>`).join("") +
-        `<p class="unofficial">${UNOFFICIAL}</p>`;
+      const rows = HISTORY[g.id];
+      document.getElementById("hist-sub").textContent = rows ? "Last month of drawings." : "History for this game will be added later.";
+      document.getElementById("hist-rows").innerHTML = rows
+        ? rows.map(([label, nums]) => `<div class="hist"><span class="note">${label}</span><div class="balls">${balls(g, nums)}</div></div>`).join("") + `<p class="unofficial">${UNOFFICIAL}</p>`
+        : '<p class="unofficial">Not loaded yet. Pick 3 / 4 / 5, Cash Pop, and Match 5 come later.</p>';
       showTab("history");
     }
     document.getElementById("do-login").onclick = () => showScreen("pay");
