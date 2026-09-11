@@ -32,8 +32,8 @@
     .game { width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.85rem 0.9rem; }
     .game b { display: block; color: var(--blue-2); font-size: 0.95rem; }
     .balls { display: flex; flex-wrap: wrap; gap: 0.28rem; margin-top: 0.5rem; }
-    .ball { min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px; display: grid; place-items: center; background: var(--blue); color: #fff; font-size: 0.72rem; font-weight: 700; }
-    .ball.gold { background: var(--gold); color: var(--gold-fg); }
+    .ball { min-width: 1.7rem; height: 1.7rem; padding: 0 0.28rem; border-radius: 999px; display: grid; place-items: center; background: var(--blue); color: #ffffff !important; font-style: normal; font-size: 0.72rem; font-weight: 700; }
+    .ball.gold { background: var(--gold); color: #1a1406 !important; }
     .tag { align-self: center; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
     .when { color: var(--mute); font-size: 0.72rem; margin-top: 0.35rem; }
     .unofficial { margin: 0.7rem 0 0; font-size: 0.72rem; line-height: 1.45; color: var(--mute); }
@@ -208,7 +208,7 @@
       return Array.from({ length: g.balls }, (_, i) => {
         const gold = g.gold && i === g.balls - 1;
         const n = gold ? (i * 3 + 11) % 26 + 1 : (i * 7 + 3) % 20 + 1;
-        return `<i class="ball${gold ? " gold" : ""}">${n}</i>`;
+        return `<span class="ball${gold ? " gold" : ""}" style="color:${gold ? "#1a1406" : "#ffffff"}">${n}</span>`;
       }).join("") + (g.tag ? `<span class="tag">${g.tag}</span>` : "");
     }
     function currentState() { return document.getElementById("state").value || "MS"; }
