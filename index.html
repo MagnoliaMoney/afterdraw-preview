@@ -32,12 +32,28 @@ input,select{width:100%;margin-top:.4rem;min-height:2.75rem;border-radius:.55rem
 .mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:.28rem;margin-top:.35rem}
 .mini-cell{aspect-ratio:1;border-radius:.28rem;background:var(--raised);border:1px solid var(--line);display:grid;place-items:center;font-family:ui-monospace,monospace;font-size:1.05rem;font-weight:600}
 .mini-cell.hl{background:#d4b44a;color:#1a1406;border-color:#d4b44a}
-nav.tab{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;display:none;grid-template-columns:1fr 1fr 1fr;background:#0c1016;border-top:1px solid var(--line);padding:.3rem .2rem calc(.35rem + env(safe-area-inset-bottom))}
+.pair-box{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin-top:.35rem}
+.pair-cell{min-height:2.4rem;border-radius:.45rem;background:var(--raised);border:1px solid var(--line);display:grid;place-items:center;font-family:ui-monospace,monospace;font-size:1.05rem;font-weight:700;letter-spacing:.08em}
+.place{margin:.65rem 0 0}
+.balls{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.35rem}
+.ball{min-width:1.7rem;height:1.7rem;padding:0 .28rem;border-radius:999px;display:grid;place-items:center;background:var(--blue);color:#fff;font-size:.72rem;font-weight:700}
+nav.tab{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;display:none;grid-template-columns:1fr 1fr 1fr 1fr;background:#0c1016;border-top:1px solid var(--line);padding:.3rem .2rem calc(.35rem + env(safe-area-inset-bottom))}
+.linkish{border:0;background:transparent;color:var(--blue);padding:.35rem 0 .2rem;font-size:.85rem;text-align:left}
+.note-body{white-space:pre-wrap;color:var(--text);font-size:.9rem;line-height:1.45;margin:.35rem 0 0}
+textarea{width:100%;margin-top:.4rem;min-height:6.5rem;border-radius:.55rem;border:1px solid var(--line);background:var(--raised);padding:.7rem .8rem;color:var(--text);resize:vertical}
 .app.tabs-on nav.tab{display:grid}
 nav.tab button{border:0;background:transparent;color:var(--mute);min-height:3.1rem;font-size:.68rem;text-transform:uppercase}
 nav.tab button[aria-current="page"]{color:var(--blue-2)}
 .note{color:var(--mute);font-size:.8rem}.code{font-size:1.6rem;color:var(--blue-2)}
 .unofficial{margin:.45rem 0 0;font-size:.7rem;color:var(--mute)}
+.board-wrap{overflow:auto;margin:.2rem -0.15rem 0;border:1px solid var(--line);border-radius:.7rem;background:var(--panel)}
+.board{width:100%;border-collapse:collapse;font-size:.78rem}
+.board th,.board td{padding:.48rem .4rem;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+.board th{color:var(--mute);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;font-weight:650;background:#0c1016;position:sticky;top:0}
+.board td.st{color:var(--blue-2);font-weight:650;text-align:left}
+.board .n{font-family:ui-monospace,monospace;font-weight:700;letter-spacing:.06em}
+.board .empty{color:#3a4554}
+.board tr:last-child td{border-bottom:0}
 .legal{padding:1rem;border-top:1px solid var(--line);text-align:center}
 .legal p{margin:0 0 .35rem;font-size:.72rem;color:var(--mute)}.legal .owner{color:var(--blue-2)}
 </style>
@@ -54,7 +70,18 @@ nav.tab button[aria-current="page"]{color:var(--blue-2)}
 <div class="stack">
 <button class="btn" type="button" id="do-login">Sign in</button>
 <button class="btn btn-ghost" type="button" id="do-create">Create account</button>
+<button class="linkish" type="button" id="do-forgot">Forgot password?</button>
 </div>
+</section>
+<section id="forgot" class="screen">
+<h1>Forgot password</h1>
+<p class="sub">Enter the email on the account. A reset link is sent if that email is on file.</p>
+<label class="field">Email<input id="forgot-email" type="email" placeholder="you@email.com"></label>
+<div class="stack">
+<button class="btn" type="button" id="do-reset">Send reset link</button>
+<button class="btn btn-ghost" type="button" id="back-login">Back to sign in</button>
+</div>
+<p class="unofficial" id="forgot-note"></p>
 </section>
 <section id="pay" class="screen">
 <h1>Unlock AfterDraw</h1>
@@ -62,10 +89,37 @@ nav.tab button[aria-current="page"]{color:var(--blue-2)}
 <div class="card" style="margin-bottom:.8rem"><div class="note">Your code</div><p class="code">AD-SHELL</p></div>
 <button class="btn" type="button" id="do-unlock">I paid — open tabs</button>
 </section>
+<section id="home" class="page">
+<h2>Welcome</h2>
+<p class="sub">The AfterDraw is for tracking, research, and entertainment only. It is not an official lottery source and does not sell tickets.</p>
+<div class="card" style="margin-bottom:.75rem">
+<p class="stat-title">Notes from Maggie</p>
+<p class="note-body" id="maggie-note"></p>
+</div>
+<div class="stack">
+<button class="btn" type="button" data-go="results">Open results</button>
+<button class="btn btn-ghost" type="button" data-go="grids">Open grids</button>
+<button class="btn btn-ghost" type="button" id="home-out">Sign out</button>
+</div>
+</section>
 <section id="results" class="page">
+<div id="result-home">
 <h2>Results</h2>
-<p class="sub">State list is here. Grid tab is the new piece to test.</p>
+<p class="sub">Latest 3-digit and 4-digit draws by state. Tap a state for that game’s page.</p>
+<div class="lp-row" style="margin-bottom:.7rem">
+<button class="chip on" type="button" data-board="both">3 and 4</button>
+<button class="chip" type="button" data-board="p3">3-digit</button>
+<button class="chip" type="button" data-board="p4">4-digit</button>
+</div>
+<div class="board-wrap"><table class="board" id="draw-board"></table></div>
 <p class="unofficial">Results are unofficial until certified and published by the applicable state lottery.</p>
+</div>
+<div id="game-page" style="display:none">
+<button class="back" type="button" id="back-results">← Results</button>
+<h2 id="game-title">Game</h2>
+<p class="sub" id="game-sub"></p>
+<div id="game-stats"></div>
+</div>
 </section>
 <section id="grids" class="page">
 <div id="grid-catalog">
@@ -83,7 +137,8 @@ nav.tab button[aria-current="page"]{color:var(--blue-2)}
 <button class="chip on" type="button" data-92="92">92 grid</button>
 <button class="chip" type="button" data-92="42">42 grid</button>
 </div>
-<label class="field">State<select id="grid-state"><option>Mississippi</option><option>New York</option><option>Any State</option></select></label>
+<label class="field">State<select id="grid-state"></select></label>
+<div id="pop-stats" style="display:none;margin:0 0 .85rem"></div>
 <label class="field">Draw date<input id="grid-date" type="date"></label>
 <label class="field">Newest draw<input id="g0" inputmode="numeric" placeholder="000"></label>
 <label class="field" id="g1-wrap">Draw before<input id="g1" inputmode="numeric" placeholder="000"></label>
@@ -103,7 +158,17 @@ nav.tab button[aria-current="page"]{color:var(--blue-2)}
 </section>
 <section id="more" class="page">
 <h2>More</h2>
+<p class="sub">House pages and your Maggie note. Notes show on the welcome page after someone pays.</p>
+<label class="field">Notes from Maggie
+<textarea id="maggie-edit">Welcome in. I will drop short updates here — new boards, draw notes, and anything you should know before you run a grid.</textarea>
+</label>
+<button class="btn" type="button" id="save-note" style="margin-bottom:.75rem">Save note</button>
+<p class="unofficial" id="note-saved"></p>
+<div class="stack">
+<div class="card">Issues from theafterdraw.com</div>
+<div class="card">About · independent post-draw analysis</div>
 <button class="btn btn-ghost" type="button" id="do-out">Sign out</button>
+</div>
 </section>
 </main>
 <footer class="legal">
@@ -112,6 +177,7 @@ nav.tab button[aria-current="page"]{color:var(--blue-2)}
 <p>© 2026 Magnolia Money / Maggie Magnolia</p>
 </footer>
 <nav class="tab">
+<button type="button" data-go="home">Home</button>
 <button type="button" data-go="results">Results</button>
 <button type="button" data-go="grids">Grid</button>
 <button type="button" data-go="more">More</button>
@@ -125,23 +191,220 @@ const app=document.getElementById("app");
 const phase=document.getElementById("phase");
 function show(id){
   document.querySelectorAll(".screen,.page").forEach(el=>el.classList.toggle("on",el.id===id));
-  const tabs=id==="login"||id==="pay"?false:true;
-  app.classList.toggle("tabs-on",tabs);
-  phase.textContent=id==="pay"?"Paywall":tabs?"Member":"Sign in";
+  const locked=id==="login"||id==="pay"||id==="forgot";
+  app.classList.toggle("tabs-on",!locked);
+  phase.textContent=id==="pay"?"Paywall":id==="forgot"?"Reset":locked?"Sign in":"Member";
   document.querySelectorAll("nav.tab button").forEach(b=>b.setAttribute("aria-current",b.dataset.go===id?"page":"false"));
   window.scrollTo(0,0);
 }
+const NOTE_KEY="afterdraw-maggie-notes";
+const NOTE_DEFAULT="Welcome in. I will drop short updates here — new boards, draw notes, and anything you should know before you run a grid.";
+function loadNote(){
+  const text=localStorage.getItem(NOTE_KEY)||NOTE_DEFAULT;
+  const view=document.getElementById("maggie-note");
+  const edit=document.getElementById("maggie-edit");
+  if(view) view.textContent=text;
+  if(edit && !edit.dataset.ready){ edit.value=text; edit.dataset.ready="1"; }
+}
+function saveNote(){
+  const text=document.getElementById("maggie-edit").value.trim()||NOTE_DEFAULT;
+  localStorage.setItem(NOTE_KEY,text);
+  document.getElementById("maggie-note").textContent=text;
+  document.getElementById("note-saved").textContent="Saved. Members see this on Home.";
+}
+loadNote();
 document.getElementById("do-login").onclick=()=>show("pay");
 document.getElementById("do-create").onclick=()=>show("pay");
-document.getElementById("do-unlock").onclick=()=>show("results");
+document.getElementById("do-unlock").onclick=()=>{ loadNote(); show("home"); };
 document.getElementById("do-out").onclick=()=>show("login");
-document.querySelectorAll("nav.tab button").forEach(b=>b.onclick=()=>show(b.dataset.go));
+document.getElementById("home-out").onclick=()=>show("login");
+document.getElementById("do-forgot").onclick=()=>show("forgot");
+document.getElementById("back-login").onclick=()=>show("login");
+document.getElementById("do-reset").onclick=()=>{
+  const em=document.getElementById("forgot-email").value.trim();
+  document.getElementById("forgot-note").textContent=em?"If that email is on file, a reset link is on the way.":"Enter an email first.";
+};
+document.getElementById("save-note").onclick=saveNote;
+document.querySelectorAll("[data-go]").forEach(b=>{
+  if(b.closest("nav.tab")) return;
+  b.onclick=()=>show(b.dataset.go);
+});
+document.querySelectorAll("nav.tab button").forEach(b=>b.onclick=()=>{
+  if(b.dataset.go==="results"){
+    document.getElementById("result-home").style.display="block";
+    document.getElementById("game-page").style.display="none";
+  }
+  show(b.dataset.go);
+});
+function pairBox(pairs){
+  return `<div class="pair-box">${pairs.map(p=>`<div class="pair-cell">${p}</div>`).join("")}</div>`;
+}
+function placeBlock(label, digits){
+  return `<div class="place"><p class="stat-title">${label}</p><div class="balls">${digits.map(n=>`<span class="ball">${n}</span>`).join("")}</div></div>`;
+}
+function sampleCold(kind, seed){
+  const pairs3=["07","18","29","30","41","52"];
+  const pairs4=["07","18","29","30","41","52","63","74","85"];
+  const shift=seed%9;
+  const src=(kind==="p4"?pairs4:pairs3).map(p=>{
+    const a=(Number(p[0])+shift)%10, b=(Number(p[1])+shift*2)%10;
+    return String(a)+String(b);
+  });
+  const places=kind==="p4"?4:3;
+  const pos=Array.from({length:places},(_,i)=>[(i+seed)%10,(i+seed+3)%10,(i+seed+7)%10]);
+  return {pairs:src.slice(0,6), pos};
+}
+const BOARD=[
+  ["Arizona","546","","2955",""],
+  ["Arkansas","533","","6729",""],
+  ["California","142","","",""],
+  ["Colorado","837","","",""],
+  ["Connecticut","952","","3407",""],
+  ["Delaware","578","889","4746",""],
+  ["Florida","381","","6145",""],
+  ["Georgia","676","851","4453",""],
+  ["Idaho","201","","3774",""],
+  ["Illinois","218","","7052",""],
+  ["Indiana","415","","9862",""],
+  ["Iowa","758","","5657",""],
+  ["Kansas","535","","",""],
+  ["Kentucky","453","","2152",""],
+  ["Maryland","816","983","5952",""],
+  ["Massachusetts","","","6468",""],
+  ["Michigan","180","063","7180",""],
+  ["Minnesota","","655","",""],
+  ["Mississippi","336","","1984",""],
+  ["Missouri","497","","9386",""],
+  ["New Jersey","810","","7017",""],
+  ["New Mexico","648","","2865",""],
+  ["New York","655","","8002",""],
+  ["North Carolina","629","","0375",""],
+  ["Ohio","461","721","6364",""],
+  ["Oregon","","","4591","3556"],
+  ["Pennsylvania","003","141","3992",""],
+  ["South Carolina","472","618","3041",""],
+  ["Tennessee","219","","8804",""],
+  ["Texas","407","","1562",""],
+  ["Virginia","350","624","2178",""]
+];
+let boardMode="both";
+function cell(v){ return v?`<span class="n">${v}</span>`:`<span class="empty">—</span>`; }
+function paintBoard(){
+  const p3=boardMode!=="p4";
+  const p4=boardMode!=="p3";
+  let head=`<tr><th>State</th>`;
+  if(p3) head+=`<th>3 Mid</th><th>3 Eve</th>`;
+  if(p4) head+=`<th>4 Mid</th><th>4 Eve</th>`;
+  head+=`</tr>`;
+  const rows=BOARD.map(r=>{
+    let t=`<td class="st">${r[0]}</td>`;
+    if(p3) t+=`<td>${cell(r[1])}</td><td>${cell(r[2])}</td>`;
+    if(p4) t+=`<td>${cell(r[3])}</td><td>${cell(r[4])}</td>`;
+    return `<tr data-state="${r[0]}">${t}</tr>`;
+  }).join("");
+  document.getElementById("draw-board").innerHTML=head+rows;
+}
+function paintResults(){ paintBoard(); }
+let openState="Mississippi";
+function openGame(kind,name){
+  const stateName=openState;
+  const st=stateName.slice(0,2);
+  const cold=sampleCold(kind, st.charCodeAt(0)+name.length);
+  const places=kind==="p4"
+    ?["1st digit","2nd digit","3rd digit","4th digit"]
+    :["1st digit","2nd digit","3rd digit"];
+  document.getElementById("result-home").style.display="none";
+  document.getElementById("game-page").style.display="block";
+  document.getElementById("game-title").textContent=name;
+  document.getElementById("game-sub").textContent=stateName+" · cold pairs in a box, then the 3 coldest digits in each place.";
+  document.getElementById("game-stats").innerHTML=
+    `<div class="card"><p class="stat-title">Coldest pairs</p>${pairBox(cold.pairs)}</div>`+
+    `<div class="card" style="margin-top:.55rem"><p class="stat-title">Coldest by place · top 3</p>`+
+    places.map((lab,i)=>placeBlock(lab, cold.pos[i])).join("")+
+    `</div><p class="unofficial">Sample cold ranks until official ${stateName} history is attached.</p>`;
+  window.scrollTo(0,0);
+}
+paintResults();
+document.querySelectorAll("[data-board]").forEach(b=>{
+  b.onclick=()=>{
+    boardMode=b.dataset.board;
+    document.querySelectorAll("[data-board]").forEach(x=>x.classList.toggle("on",x===b));
+    paintBoard();
+  };
+});
+document.getElementById("draw-board").onclick=e=>{
+  const row=e.target.closest("[data-state]");
+  if(!row) return;
+  openState=row.dataset.state;
+  const is4=boardMode==="p4";
+  openGame(is4?"p4":"p3", is4?"Cash 4 / Pick 4":"Cash 3 / Pick 3");
+};
+document.getElementById("back-results").onclick=()=>{
+  document.getElementById("game-page").style.display="none";
+  document.getElementById("result-home").style.display="block";
+};
 function cards(list,kind){
   return list.map(n=>`<button class="game" type="button" data-kind="${kind}" data-name="${n}"><b>${n}</b><div class="when">${kind}</div></button>`).join("");
 }
 document.getElementById("c3-grids").innerHTML=cards(C3,"Cash 3 / Pick 3");
 document.getElementById("c4-grids").innerHTML=cards(C4,"Cash 4 / Pick 4");
 document.getElementById("pop-grids").innerHTML=cards(POP,"Cash Pop");
+const POP_STATES={
+  MS:{name:"Mississippi",perDay:2,slots:["Day","Evening"]},
+  SC:{name:"South Carolina",perDay:2,slots:["Midday","Evening"]},
+  WA:{name:"Washington",perDay:1,slots:["Evening"]},
+  MD:{name:"Maryland",perDay:4,slots:["9:00 AM","1:00 PM","6:00 PM","11:00 PM"]},
+  PA:{name:"Pennsylvania",perDay:4,slots:["Morning Buzz","Lunch Break","Prime Time","Night Owl"]},
+  ME:{name:"Maine",perDay:4,slots:["Morning","Midday","Evening","Night"]},
+  FL:{name:"Florida",perDay:5,slots:[]},
+  GA:{name:"Georgia",perDay:5,slots:[]},
+  IN:{name:"Indiana",perDay:5,slots:[]},
+  MO:{name:"Missouri",perDay:5,slots:[]},
+  VA:{name:"Virginia",perDay:5,slots:[]},
+  NC:{name:"North Carolina",perDay:5,slots:[]},
+  MI:{name:"Michigan",perDay:186,slots:[]},
+  KY:{name:"Kentucky",perDay:314,slots:[]},
+  NJ:{name:"New Jersey",perDay:308,slots:[]},
+  WV:{name:"West Virginia",perDay:90,slots:[]},
+  OR:{name:"Oregon",perDay:16,slots:[]}
+};
+function popBalls(nums){
+  return `<div class="balls">${nums.map(n=>`<span class="ball" style="display:inline-grid;place-items:center;min-width:1.7rem;height:1.7rem;border-radius:999px;background:#4f8fd6;color:#fff;font-size:.72rem;font-weight:700;margin-right:.28rem">${n}</span>`).join("")}</div>`;
+}
+function popRank(seed,count){
+  const a=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+  let x=seed;
+  a.sort((m,n)=>{ x=(x*1103515245+12345)&0x7fffffff; return (x%17)-8; });
+  return {hot:a.slice(0,5), cold:a.slice(-5).reverse()};
+}
+function renderPopStats(){
+  const box=document.getElementById("pop-stats");
+  if(!box) return;
+  if(kind!=="pop"){ box.style.display="none"; return; }
+  const code=document.getElementById("grid-state").value||"MS";
+  const info=POP_STATES[code]||{name:code,perDay:99,slots:[]};
+  const overall=popRank(code.charCodeAt(0)+info.perDay,5);
+  let html=`<div class="card"><p class="stat-title">${info.name} · all Cash Pop draws</p>
+    <p class="when" style="margin:0 0 .35rem">Hottest overall</p>${popBalls(overall.hot)}
+    <p class="when" style="margin:.55rem 0 .35rem">Coldest overall</p>${popBalls(overall.cold)}
+    <p class="unofficial">Sample ranks until official ${info.name} history is attached.</p></div>`;
+  if(info.perDay<=4 && info.slots.length){
+    html+=info.slots.map((slot,i)=>{
+      const r=popRank(code.charCodeAt(1)+i*13+7,5);
+      return `<div class="card" style="margin-top:.55rem"><p class="stat-title">${slot} draw</p>
+        <p class="when" style="margin:0 0 .35rem">Hottest</p>${popBalls(r.hot)}
+        <p class="when" style="margin:.55rem 0 .35rem">Coldest</p>${popBalls(r.cold)}</div>`;
+    }).join("");
+  } else {
+    html+=`<p class="unofficial">${info.name} runs ${info.perDay} Cash Pop draws a day, so only overall hottest / coldest is shown.</p>`;
+  }
+  box.innerHTML=html;
+  box.style.display="block";
+}
+const popSel=document.getElementById("grid-state");
+popSel.innerHTML=Object.entries(POP_STATES).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([c,s])=>`<option value="${c}">${s.name}</option>`).join("");
+popSel.value="MS";
+popSel.onchange=renderPopStats;
 let kind="c3", title="Grid", mode92="92";
 function openGrid(k,name){
   kind=k.includes("Pop")?"pop":k.includes("4")?"c4":"c3";
@@ -153,6 +416,7 @@ function openGrid(k,name){
   document.getElementById("grid-card").style.display="none";
   document.getElementById("g1-wrap").style.display=kind==="pop"?"none":"block";
   document.getElementById("g2-wrap").style.display=kind==="c3"?"block":"none";
+  renderPopStats();
   window.scrollTo(0,0);
 }
 document.getElementById("c3-grids").onclick=document.getElementById("c4-grids").onclick=document.getElementById("pop-grids").onclick=e=>{
