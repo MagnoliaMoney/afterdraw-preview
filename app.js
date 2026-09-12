@@ -53,10 +53,10 @@ function gamesFor(code) {
   return list;
 }
 const HISTORY = {
-  pb: [["Wed Sep 9, 2026",[9,40,42,55,65,23]],["Mon Sep 7, 2026",[15,19,28,39,56,3]],["Sat Sep 5, 2026",[15,40,47,53,59,9]],["Wed Sep 2, 2026",[3,10,29,58,64,14]],["Mon Aug 31, 2026",[11,17,25,37,49,10]],["Sat Aug 29, 2026",[18,56,62,65,67,18]],["Wed Aug 26, 2026",[12,32,45,50,58,2]],["Mon Aug 24, 2026",[3,16,33,38,68,2]],["Sat Aug 22, 2026",[13,31,54,57,65,23]],["Wed Aug 19, 2026",[10,21,58,61,64,17]],["Mon Aug 17, 2026",[8,15,25,49,65,22]],["Sat Aug 15, 2026",[5,8,27,29,63,13]],["Wed Aug 12, 2026",[4,26,66,67,69,9]]],
-  mm: [["Tue Sep 8, 2026",[17,30,43,58,66,20]],["Fri Sep 4, 2026",[6,26,34,59,61,24]],["Tue Sep 1, 2026",[1,22,51,61,63,17]],["Fri Aug 28, 2026",[8,17,29,42,55,2]],["Tue Aug 25, 2026",[7,10,47,48,50,14]],["Fri Aug 21, 2026",[1,25,34,48,57,24]],["Tue Aug 18, 2026",[5,19,30,38,59,12]],["Fri Aug 14, 2026",[3,23,27,46,60,11]],["Tue Aug 11, 2026",[1,20,30,46,68,17]]],
-  la: [["Wed Sep 9, 2026",[3,4,44,47,49,4]],["Mon Sep 7, 2026",[1,15,24,35,42,9]],["Sat Sep 5, 2026",[20,21,27,32,44,3]],["Wed Sep 2, 2026",[2,4,16,39,45,6]],["Mon Aug 31, 2026",[8,22,27,30,34,4]],["Sat Aug 29, 2026",[7,10,25,30,33,2]],["Wed Aug 26, 2026",[5,8,36,37,45,5]],["Mon Aug 24, 2026",[7,13,23,35,44,3]],["Sat Aug 22, 2026",[20,23,36,42,50,4]],["Wed Aug 19, 2026",[23,31,40,41,45,1]],["Mon Aug 17, 2026",[5,8,10,24,27,4]],["Sat Aug 15, 2026",[8,18,19,40,41,10]],["Wed Aug 12, 2026",[1,9,27,32,36,2]]],
-  mil: [["Thu Sep 10, 2026",[7,16,43,50,58,1]],["Wed Sep 9, 2026",[2,25,54,55,57,2]],["Tue Sep 8, 2026",[14,19,36,41,42,2]],["Mon Sep 7, 2026",[1,14,35,42,51,2]],["Sun Sep 6, 2026",[17,30,39,40,55,4]],["Sat Sep 5, 2026",[8,22,24,38,58,3]],["Fri Sep 4, 2026",[13,34,41,51,52,4]],["Thu Sep 3, 2026",[1,10,23,29,33,3]],["Wed Sep 2, 2026",[7,23,43,46,53,3]],["Tue Sep 1, 2026",[16,37,45,55,58,4]],["Mon Aug 31, 2026",[2,9,30,37,45,4]],["Sun Aug 30, 2026",[9,27,36,54,56,3]],["Sat Aug 29, 2026",[2,7,26,45,52,4]],["Fri Aug 28, 2026",[8,10,11,12,44,2]],["Thu Aug 27, 2026",[3,7,29,35,49,5]],["Wed Aug 26, 2026",[3,25,51,54,56,4]],["Tue Aug 25, 2026",[24,45,50,53,57,3]],["Mon Aug 24, 2026",[7,19,26,41,49,4]],["Sun Aug 23, 2026",[15,28,32,55,57,1]],["Sat Aug 22, 2026",[7,17,27,36,39,4]],["Fri Aug 21, 2026",[1,20,25,56,57,2]],["Thu Aug 20, 2026",[1,16,26,40,44,4]],["Wed Aug 19, 2026",[10,12,26,44,57,4]],["Tue Aug 18, 2026",[4,18,29,32,37,4]],["Mon Aug 17, 2026",[3,6,33,42,48,4]],["Sun Aug 16, 2026",[10,13,41,43,52,2]],["Sat Aug 15, 2026",[12,13,26,35,43,4]],["Fri Aug 14, 2026",[12,15,18,28,35,3]],["Thu Aug 13, 2026",[7,16,25,35,42,2]],["Wed Aug 12, 2026",[8,22,23,28,35,3]]]
+  pb: [["Wed Sep 9, 2026",[9,40,42,55,65,23]],["Mon Sep 7, 2026",[15,19,28,39,56,3]],["Sat Sep 5, 2026",[15,40,47,53,59,9]],["Wed Sep 2, 2026",[3,10,29,58,64,14]],["Mon Aug 31, 2026",[11,17,25,37,49,10]]],
+  mm: [["Tue Sep 8, 2026",[17,30,43,58,66,20]],["Fri Sep 4, 2026",[6,26,34,59,61,24]],["Tue Sep 1, 2026",[1,22,51,61,63,17]]],
+  la: [["Wed Sep 9, 2026",[3,4,44,47,49,4]],["Mon Sep 7, 2026",[1,15,24,35,42,9]],["Sat Sep 5, 2026",[20,21,27,32,44,3]]],
+  mil: [["Thu Sep 10, 2026",[7,16,43,50,58,1]],["Wed Sep 9, 2026",[2,25,54,55,57,2]],["Tue Sep 8, 2026",[14,19,36,41,42,2]]]
 };
 const FREQ = {
   pb: { note: "All Powerball draws under current rules (since Oct 2015).", hot: [61,21,64,28,27,32], cold: [13,26,46,49,34,25] },
@@ -77,8 +77,8 @@ async function loadNyYear() {
       const base = months[Number(m) - 1] + " " + Number(dd) + ", " + y;
       const md = String(r.midday_daily || "").padStart(3, "0").slice(-3);
       const ev = String(r.evening_daily || "").padStart(3, "0").slice(-3);
-      if (/^\\d{3}$/.test(md)) out.push([base + " Mid", md.split("").map(Number)]);
-      if (/^\\d{3}$/.test(ev)) out.push([base + " Eve", ev.split("").map(Number)]);
+      if (/^\d{3}$/.test(md)) out.push([base + " Mid", md.split("").map(Number)]);
+      if (/^\d{3}$/.test(ev)) out.push([base + " Eve", ev.split("").map(Number)]);
     });
     HISTORY.p3_NY = out;
   } catch (e) {}
@@ -113,7 +113,7 @@ function currentState() { return document.getElementById("state").value || "MS";
 function renderResults() {
   const list = gamesFor(currentState());
   const box = document.getElementById("result-list");
-  if (!list.length) { box.innerHTML = '<p class="unofficial">No lottery draw games in AfterDraw\u2019s list for this state.</p>'; return; }
+  if (!list.length) { box.innerHTML = '<p class="unofficial">No lottery draw games in AfterDraw for this state.</p>'; return; }
   box.innerHTML = list.map((g) => {
     const latest = (HISTORY[g.id] || [])[0];
     const when = latest ? latest[0] : "History coming later";
@@ -125,16 +125,13 @@ function digitHotCold(rows) {
   const freq = Array(10).fill(0);
   rows.forEach(([, nums]) => nums.forEach((n) => { if (n >= 0 && n <= 9) freq[n]++; }));
   const ranked = freq.map((c, n) => [n, c]).sort((a, b) => b[1] - a[1] || a[0] - b[0]);
-  return { hot: ranked.slice(0, 5).map((x) => x[0]), cold: ranked.slice(-5).reverse().map((x) => x[0]), note: "Digits from this state\u2019s 3-digit history (all positions)." };
+  return { hot: ranked.slice(0, 5).map((x) => x[0]), cold: ranked.slice(-5).reverse().map((x) => x[0]), note: "Digits from this state's 3-digit history." };
 }
 let histCache = { rows: [], game: null };
 function drawHistList(q) {
   const g = histCache.game;
   const needle = (q || "").trim().toLowerCase().replace(/\s+/g, "");
-  const rows = histCache.rows.filter(([label, nums]) => {
-    if (!needle) return true;
-    return (label + " " + nums.join("")).toLowerCase().replace(/\s+/g, "").includes(needle);
-  });
+  const rows = histCache.rows.filter(([label, nums]) => !needle || (label + " " + nums.join("")).toLowerCase().replace(/\s+/g, "").includes(needle));
   const box = document.getElementById("hist-list");
   if (!box) return;
   box.innerHTML = rows.length ? rows.map(([label, nums]) => `<div class="hist"><span class="note">${label}</span><div class="balls">${balls(g, nums)}</div></div>`).join("") : '<p class="unofficial">No draws match that search.</p>';
@@ -145,30 +142,28 @@ function openHistory(id) {
   document.getElementById("hist-title").textContent = g.name;
   let rows = HISTORY[g.id] || HISTORY[g.id.split("_")[0]];
   if (g.id === "p3_NY" && (!rows || rows.length < 20)) {
-    document.getElementById("hist-sub").textContent = "Loading official New York year\u2026";
+    document.getElementById("hist-sub").textContent = "Loading official New York year…";
     loadNyYear().then(() => openHistory(id));
     showTab("history");
     return;
   }
   const isP3 = g.id.startsWith("p3");
   const freq = isP3 && rows ? digitHotCold(rows) : FREQ[id.split("_")[0]];
-  document.getElementById("hist-q").value = "";
-  document.getElementById("hist-q").style.display = rows ? "block" : "none";
+  const qEl = document.getElementById("hist-q");
+  if (qEl) { qEl.value = ""; qEl.style.display = rows ? "block" : "none"; }
   if (!rows) {
-    document.getElementById("hist-sub").textContent = isP3 ? "3-digit page is ready for every state. Full year attaches by state." : "This game\u2019s page is ready. Draw history comes later.";
-    document.getElementById("hist-rows").innerHTML = '<p class="unofficial">' + (isP3 ? "Year of official 3-digit results for this state is next. New York Numbers is loaded now so you can search a full year." : "Pick 4 / 5, Cash Pop, and Match 5 history not loaded yet.") + "</p>";
+    document.getElementById("hist-sub").textContent = "This game page is ready.";
+    document.getElementById("hist-rows").innerHTML = '<p class="unofficial">History attaches by state. New York Numbers loads official results.</p>';
     showTab("history");
     return;
   }
   const latest = rows[0];
-  document.getElementById("hist-sub").textContent = isP3 ? "Hot / cold from this state\u2019s 3-digit history. Search the year below." : "Hot / cold from all history. Search the list below.";
   histCache = { rows, game: g };
+  document.getElementById("hist-sub").textContent = "Most recent draw, hot / cold, then the list.";
   document.getElementById("hist-rows").innerHTML =
     `<div class="card" style="margin-bottom:0.7rem"><p class="stat-title">Most recent draw</p><div class="balls">${balls(g, latest[1])}</div><div class="when">${latest[0]}</div></div>` +
-    `<div class="card" style="margin-bottom:0.7rem"><p class="stat-title">Hot numbers</p><div class="balls">${freqBalls(freq.hot)}</div><p class="when">${freq.note}</p></div>` +
-    `<div class="card" style="margin-bottom:0.85rem"><p class="stat-title">Cold numbers</p><div class="balls">${freqBalls(freq.cold)}</div><p class="when">${freq.note}</p></div>` +
-    `<p class="stat-title">Draws</p><div id="hist-list"></div>` +
-    `<p class="unofficial">Results are unofficial until certified and published by the applicable state lottery.</p>`;
+    (freq ? `<div class="card" style="margin-bottom:0.7rem"><p class="stat-title">Hot numbers</p><div class="balls">${freqBalls(freq.hot)}</div></div><div class="card" style="margin-bottom:0.85rem"><p class="stat-title">Cold numbers</p><div class="balls">${freqBalls(freq.cold)}</div></div>` : "") +
+    `<p class="stat-title">Draws</p><div id="hist-list"></div><p class="unofficial">Results are unofficial until certified and published by the applicable state lottery.</p>`;
   drawHistList("");
   showTab("history");
 }
@@ -177,23 +172,10 @@ document.getElementById("do-create").onclick = () => showScreen("pay");
 document.getElementById("do-unlock").onclick = () => { showTab("results"); loadNyYear().then(renderResults); };
 document.getElementById("do-out").onclick = () => showScreen("login");
 document.getElementById("back-results").onclick = () => showTab("results");
-document.getElementById("hist-q").addEventListener("input", (e) => drawHistList(e.target.value));
+const hq = document.getElementById("hist-q");
+if (hq) hq.addEventListener("input", (e) => drawHistList(e.target.value));
 document.getElementById("result-list").addEventListener("click", (e) => { const btn = e.target.closest("[data-game]"); if (btn) openHistory(btn.dataset.game); });
 document.querySelectorAll("nav.tab button").forEach((b) => { b.onclick = () => showTab(b.dataset.go); });
-document.getElementById("build-grid").onclick = () => {
-  const raw = document.getElementById("grid-in").value.trim();
-  document.getElementById("grid-label").textContent = raw ? "Mapped from: " + raw : "Type something first.";
-  const box = document.getElementById("grid-box");
-  box.innerHTML = "";
-  const seed = raw.replace(/\D/g, "") || "0";
-  for (let i = 0; i < 20; i++) {
-    const cell = document.createElement("div");
-    const n = (Number(seed[i % seed.length]) + i) % 10;
-    cell.className = "cell" + (raw && i % 3 !== 2 ? " on" : "");
-    cell.textContent = n;
-    box.appendChild(cell);
-  }
-};
 const KEY = "afterdraw-default-state";
 function stateName(code) { const row = STATES.find((s) => s[0] === code); return row ? row[1] : code; }
 function showDefault() { document.getElementById("default-note").textContent = "Default state: " + stateName(localStorage.getItem(KEY) || "MS"); }
@@ -204,4 +186,69 @@ stateSel.onchange = renderResults;
 document.getElementById("save-state").onclick = () => { localStorage.setItem(KEY, currentState()); showDefault(); };
 showDefault();
 renderResults();
-document.getElementById("grid-box").innerHTML = Array.from({ length: 20 }, () => '<div class="cell">\u00b7</div>').join("");
+const GRID_LIST = {
+  c3: [{id:"g92",name:"92 grid"},{id:"g927",name:"927 grid"},{id:"g646",name:"646 grid"},{id:"g628",name:"628 grid"},{id:"g111",name:"111 grid"},{id:"g123",name:"123 grid"},{id:"g317",name:"317 grid"},{id:"g369",name:"369 grid"},{id:"g31",name:"31 grid"},{id:"gmmb",name:"MMB grid"},{id:"gnamg",name:"NAMG"}],
+  c4: [{id:"g6464",name:"6464 grid"},{id:"g4228",name:"4228 grid"},{id:"g1111",name:"1111 grid"}],
+  pop: [{id:"gpop1",name:"Cash Pop grid 1"},{id:"gpop2",name:"Cash Pop grid 2"}]
+};
+let activeGrid = null, gridGame = "c3", grid92Mode = "92";
+function paintCatalog() {
+  [["c3-grids","c3"],["c4-grids","c4"],["pop-grids","pop"]].forEach(([boxId, kind]) => {
+    document.getElementById(boxId).innerHTML = GRID_LIST[kind].map((g) => `<button class="game" type="button" data-kind="${kind}" data-gid="${g.id}"><b>${g.name}</b><div class="when">${kind==="c3"?"Cash 3 / Pick 3":kind==="c4"?"Cash 4 / Pick 4":"Cash Pop"}</div></button>`).join("");
+  });
+}
+function openGrid(kind, gid) {
+  activeGrid = GRID_LIST[kind].find((g) => g.id === gid);
+  if (!activeGrid) return;
+  gridGame = kind === "pop" ? "pop" : kind;
+  document.getElementById("grid-catalog").style.display = "none";
+  document.getElementById("grid-builder").style.display = "block";
+  document.getElementById("grid-title").textContent = activeGrid.name;
+  document.getElementById("grid-92").style.display = gid === "g92" ? "flex" : "none";
+  document.getElementById("grid-card").style.display = "none";
+  document.getElementById("g1").closest("label").style.display = gridGame === "pop" ? "none" : "block";
+  document.getElementById("g2-wrap").style.display = gridGame === "c3" ? "block" : "none";
+  window.scrollTo(0, 0);
+}
+paintCatalog();
+document.getElementById("c3-grids").onclick = document.getElementById("c4-grids").onclick = document.getElementById("pop-grids").onclick = (e) => {
+  const b = e.target.closest("[data-gid]");
+  if (b) openGrid(b.dataset.kind, b.dataset.gid);
+};
+document.getElementById("back-grids").onclick = () => {
+  document.getElementById("grid-builder").style.display = "none";
+  document.getElementById("grid-catalog").style.display = "block";
+};
+document.getElementById("grid-92").onclick = (e) => {
+  const b = e.target.closest("[data-92]");
+  if (!b) return;
+  grid92Mode = b.getAttribute("data-92");
+  document.querySelectorAll("#grid-92 .chip").forEach((c) => c.classList.toggle("on", c === b));
+  document.getElementById("grid-title").textContent = grid92Mode + " grid";
+};
+const gridState = document.getElementById("grid-state");
+gridState.innerHTML = ["Any State"].concat(STATES.slice().sort((a,b)=>a[1].localeCompare(b[1])).map((s)=>s[1])).map((n)=>`<option>${n}</option>`).join("");
+const gd = document.getElementById("grid-date");
+const now = new Date();
+gd.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;
+document.getElementById("build-grid").onclick = () => {
+  if (!document.getElementById("grid-agree").checked) {
+    document.getElementById("grid-label").textContent = "Check the research agreement first.";
+    return;
+  }
+  const title = activeGrid && activeGrid.id === "g92" ? grid92Mode + " grid" : (activeGrid ? activeGrid.name : "Grid");
+  document.getElementById("grid-card").style.display = "block";
+  document.getElementById("grid-card-title").textContent = title;
+  const raw = ["g0","g1","g2"].map((id) => document.getElementById(id).value.replace(/\D/g,"")).join("") || "0";
+  document.getElementById("grid-box").innerHTML = Array.from({length: 28}, (_, i) => {
+    const n = Number(raw[i % raw.length]);
+    return `<div class="mini-cell${i % 4 === 0 ? " hl" : ""}">${n}</div>`;
+  }).join("");
+  document.getElementById("grid-label").textContent = "Layout preview. Named mix rules attach next.";
+};
+document.getElementById("grid-convert").onclick = () => {
+  document.querySelectorAll("#grid-box .mini-cell").forEach((c) => {
+    const n = Number(c.textContent);
+    c.textContent = (n + 5) % 10;
+  });
+};
